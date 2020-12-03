@@ -1,0 +1,43 @@
+  <!--Ce HTML va être chargé au démarrage, avant même qu'on entre dans le Web Socket-->
+  <!DOCTYPE html>
+  <html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>02E Node.js</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link href="/styles.css" rel="stylesheet" />
+  </head>
+
+  <body>
+
+    <h1>TimeLine!</h1>
+    <div id="tapis-02e">
+      <div id="titre"></div>
+      <div id="temps-window">
+        <div id="output"></div>
+        <div id="feedback"></div>
+      </div>
+      <input id="user" type="text" placeholder="User" />
+      <input id="message" type="text" placeholder="Message" />
+      <button id="send">Send</button>
+      <div id="section-joueur">
+        <div id="joueur">        
+        </div>
+        <ul id="jeu">
+          <!-- <li class="carte">allo</li>
+          <li class="carte">blabla</li>
+          <li class="carte">leuble</li>
+          <li class="carte">sssss</li>
+          <li class="carte">e</li> -->
+        </ul>
+      </div>
+
+    </div>
+
+    <!--Va s'exécuter côté client et demander une connexion Web Socket-->
+    <script src="/chat.js"></script>
+
+  </body>
+
+  </html>
