@@ -1,3 +1,4 @@
+"use strict";
 //Ce script va ramener le client vers index.js grâce à io.connection()
 
 //Récupération des éléments du DOM
