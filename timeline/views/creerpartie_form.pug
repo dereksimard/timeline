@@ -1,0 +1,31 @@
+html
+  head
+    title Timeline Online
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    block content
+    h1 Page de création de partie
+    <form action="/utilisateurs/#{id_utilisateur}/parties" method="POST">
+        <div>
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date"/> 
+        </div>
+        <div>
+            <input type="hidden" id="nom" name="nom" value="#{nom}"/> 
+        </div>
+        <div>
+            <label for="courriel1">Invité 1</label>
+            <input type="text" id="courriel1" name="courriel1"/> 
+        </div>
+        <div>
+            <label for="courriel2">Invité 2</label>
+            <input type="text" id="courriel2" name="courriel2"/> 
+        </div>
+        <div>
+            <label for="courriel3">Invité 3</label>
+            <input type="text" id="courriel3" name="courriel3"/> 
+        </div>
+        <button type="submit">Terminer la partie</button>
+    </form>
+    span=erreur
+    <a href="/parties">liste des parties</a>

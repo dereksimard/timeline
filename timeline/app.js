@@ -9,6 +9,13 @@ var logger = require('morgan');
 // Pour utiliser Json Web Token
 var jwt = require('jsonwebtoken');
 
+// Création des handlers
+var indexRouter = require('./routes/index');
+var connexionRouter = require('./routes/connexionRouter');
+var inscriptionRouter = require('./routes/inscriptionRouter');
+var carteRouter = require('./routes/carteRouter');
+var utilisateurRouter = require('./routes/utilisateurRouter');
+var partieRouter = require('./routes/partieRouter');
 var app = express();
 
 // view engine setup
@@ -22,12 +29,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Relie les URI aux handlers
-app.use('/', index);
+app.use('/', indexRouter);
+
+app.use('/connexion', connexionRouter);
+app.use('/inscription', inscriptionRouter);
+app.use('/carte', carteRouter);
+app.use('/utilisateurs', utilisateurRouter);
+app.use('/parties',partieRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
+
+
 
 // error handler
 app.use(function (err, req, res, next) {

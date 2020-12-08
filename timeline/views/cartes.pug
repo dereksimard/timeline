@@ -1,0 +1,12 @@
+html
+  head
+    title Timeline Online
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    block content
+    h1 les cartes
+    each carte in cartes
+      <li><a href="/carte/#{carte._id}">#{carte.cue}</a></li>
+    
+    span=erreur
+  
