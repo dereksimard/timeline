@@ -9,7 +9,7 @@
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.16.4",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.3",
@@ -17,6 +17,7 @@
     "morgan": "~1.9.1",
     "node.js": "0.0.1-security",
     "pug": "^3.0.0",
+    "socket.io": "^3.0.4",
     "validator": "^13.1.17"
   },
   "devDependencies": {
