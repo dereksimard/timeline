@@ -90,20 +90,9 @@ var cartes = getCartes();
 // App setup
 var app = express();
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-var server = app.listen(port, function () {
-	console.log("Service sur le port 8000");
+var server = app.listen(3000, function () {
+	console.log("Service sur le port 3000");
 });
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
 
 // Static files
 app.use(express.static('public'));
