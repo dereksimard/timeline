@@ -90,8 +90,8 @@ var cartes = getCartes();
 // App setup
 var app = express();
 
-var server = app.listen(3000, function () {
-	console.log("Service sur le port 3000");
+var server = app.listen(8000, function () {
+	console.log("Service sur le port 8000");
 });
 
 // Static files
