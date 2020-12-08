@@ -1,3 +1,5 @@
+"use strict";
+
 var express = require('express');
 var socket = require('socket.io');
 var mongoose = require('mongoose');
@@ -87,9 +89,21 @@ var cartes = getCartes();
 
 // App setup
 var app = express();
-var server = app.listen(8000, function () {
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+var server = app.listen(port, function () {
 	console.log("Service sur le port 8000");
 });
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
 
 // Static files
 app.use(express.static('public'));
