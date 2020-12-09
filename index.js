@@ -12,6 +12,7 @@ const CarteSchema = new mongoose.Schema({
 	show: String,
 	rep: Number
 });
+
 const UtilisateurSchema = new mongoose.Schema({
 	nom: {
 		type: String,
@@ -40,6 +41,7 @@ const PartieSchema = new mongoose.Schema({
 	pioche: [{ carte: Number }],
 	tapis: [{ carte: Number }]
 });
+
 var carteModel = mongoose.model('Carte', CarteSchema);
 var utilisateurModel = mongoose.model('Utilisateur', UtilisateurSchema);
 var partieModel = mongoose.model('Partie', PartieSchema);
@@ -63,11 +65,11 @@ async function getCartes() {
 	});
 	return tab_cartes;
 }
+
 async function getJoueur(id_joueur) {
 
 	return await utilisateurModel.findById(id_joueur);
 }
-
 
 async function getNbJoueursPartie(id_partie) {
 	//Conversion de l'id de type String en ObjectId
@@ -86,12 +88,11 @@ async function getNbJoueursPartie(id_partie) {
 
 var cartes = getCartes();
 
-
 // App setup
 var app = express();
 
-var server = app.listen(8000, function () {
-	console.log("Service sur le port 8000");
+var server = app.listen(3000, function () {
+	console.log("Service sur le port 3000");
 });
 
 // Static files
