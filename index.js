@@ -91,9 +91,7 @@ var cartes = getCartes();
 // App setup
 var app = express();
 
-app = process.env.PORT || 3000
-
-var server = app.listen(3000, function () {
+var server = app.listen(process.env.PORT || 3000, function () {
 	console.log("Service sur le port 3000");
 });
 
