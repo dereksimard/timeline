@@ -15,21 +15,16 @@
     <div id="tapis-02e">
       <div id="titre"></div>
       <div id="temps-window">
-        <div id="output"></div>
+        <ul id="output"></ul>
         <div id="feedback"></div>
       </div>
-      <input id="user" type="text" placeholder="User" />
-      <input id="message" type="text" placeholder="Message" />
-      <button id="send">Send</button>
+  
+      <input id="positionCarte" type="number" min="0" placeholder="Entrez la position où déposer la carte (exemple : 0, 1, 2, etc.)" />
+      <button id="send">Déposer la carte</button>
       <div id="section-joueur">
-        <div id="joueur">        
-        </div>
+        <span id="numJoueur"></span><span id="nomJoueur"></span>
         <ul id="jeu">
-          <!-- <li class="carte">allo</li>
-          <li class="carte">blabla</li>
-          <li class="carte">leuble</li>
-          <li class="carte">sssss</li>
-          <li class="carte">e</li> -->
+          <!--Sera populé au début de la partie-->
         </ul>
       </div>
 
@@ -39,5 +34,8 @@
     <script src="/chat.js"></script>
 
   </body>
+  <footer>
+    
+  </footer>
 
   </html>

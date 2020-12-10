@@ -6,6 +6,7 @@ h2 {
     font-size: 18px;
     padding: 10px 20px;
     color: #575ed8;
+  text-align: center;
 }
 
 #tapis-02e {
@@ -20,12 +21,13 @@ h2 {
     height: 300px;
     overflow: auto;
     background: #f9f9f9;
-
+    position: relative;
 }
 
 #output {
     display: flex;
     flex-direction: row;
+    list-style: none;
 }
 
 #output p {
@@ -40,8 +42,13 @@ h2 {
 
 }
 
+#feedback {
+    position: absolute;
+    bottom: 0;
+}
+
 #feedback p {
-    color: #aaa;
+    color: blue;
     padding: 14px 0px;
     margin: 0 20px;
 }
@@ -49,21 +56,24 @@ h2 {
 #output strong {
     color: #575ed8;
 }
-#section-joueur{
-    display: inline-block;
+
+#section-joueur {
+
     justify-content: center;
 }
+
 #jeu {
     height: 200px;
     overflow: auto;
     background: #f9f9f9;
     list-style-type: none;
-    justify-content: center;
+    text-align: center;
     display: inline-block;
-    margin:0;
-   
+    margin: 0;
+    display: flex;
 }
-.carte{
+
+.carte {
     padding: 14px 0px;
     margin: 0 20px;
     border: 1px solid black;
@@ -72,12 +82,27 @@ h2 {
     width: 100px;
     text-align: center;
     min-width: 100px;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
 }
-#joueur{
+#jeu .carte:hover{
+    background-color: #575ed8;
+    color:white;
+}
+.carte.selectionnee{
+    background-color: #575ed8;
+    color:white;
+}
+
+.carte span {
+    margin-top: 10px;
+}
+
+
+#joueur {
     height: 50px;
     overflow: auto;
-  
+
 }
 
 label {
@@ -107,4 +132,8 @@ button {
     padding: 12px 0;
     width: 100%;
     border-radius: 0 0 2px 2px;
+}
+button:hover{
+    background: #a4a6cf;
+
 }

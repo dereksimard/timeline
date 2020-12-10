@@ -1,5 +1,3 @@
-"use strict";
-
 var express = require('express');
 var socket = require('socket.io');
 var mongoose = require('mongoose');
@@ -12,7 +10,6 @@ const CarteSchema = new mongoose.Schema({
 	show: String,
 	rep: Number
 });
-
 const UtilisateurSchema = new mongoose.Schema({
 	nom: {
 		type: String,
@@ -30,16 +27,13 @@ const UtilisateurSchema = new mongoose.Schema({
 		validate: (value) => {
 			return validator.isEmail(value)
 		}
-	},
-	main: [Number],
+	}
+
 });
 
 const PartieSchema = new mongoose.Schema({
-
 	date: Date,
-	invites: [String],
-	pioche: [{ carte: Number }],
-	tapis: [{ carte: Number }]
+	invites: [String]
 });
 
 var carteModel = mongoose.model('Carte', CarteSchema);
@@ -71,6 +65,7 @@ async function getJoueur(id_joueur) {
 	return await utilisateurModel.findById(id_joueur);
 }
 
+
 async function getNbJoueursPartie(id_partie) {
 	//Conversion de l'id de type String en ObjectId
 	var objId = mongoose.Types.ObjectId(id_partie);
@@ -88,14 +83,13 @@ async function getNbJoueursPartie(id_partie) {
 
 var cartes = getCartes();
 
+
 // App setup
 var app = express();
+var server = app.listen(8000, function () {
+	console.log("Service sur le port 8000");
+});
 
-var server = app.listen(process.env.PORT || 3000, function () {
-	var port = server.address().port;
-	console.log("Port :" + port);
-  });
-  
 // Static files
 app.use(express.static('public'));
 
@@ -105,7 +99,11 @@ app.use(express.static('public'));
 var io = socket(server);
 
 var dict = {};
+
 var dictJoueurs = {};
+var dictMains = {};
+var tapis = [];
+var tas;
 
 // Lancement du Socket : événement, fonction de rappel
 io.on('connection', function (socket) {
@@ -119,6 +117,10 @@ io.on('connection', function (socket) {
 	//Obtention du nb de joueurs attendus
 	var promise = getNbJoueursPartie(id_partie);
 	var nb;
+
+
+
+
 	dict[id_partie] = 0;
 
 	promise.then(result => {
@@ -126,7 +128,7 @@ io.on('connection', function (socket) {
 
 		//Si la clé id_joueur n'est pas dans le dictionnaire, on l'ajoute
 		//clé = id_joueur, valeur = socket
-		if (!(id_joueur in dictJoueurs)) {			
+		if (!(id_joueur in dictJoueurs)) {
 			dict[id_partie] += 1;
 			dictJoueurs[id_joueur] = socket.id;
 			console.log("Le joueur " + dict[id_partie] + " est " + id_joueur + "et a le socket " + socket.id);
@@ -138,23 +140,42 @@ io.on('connection', function (socket) {
 			cartes.then(
 				cartes => {
 					if (cartes) {
-					
+
 						var carteRnd;
 						//Pour chaque joueur, on crée une main avec des cartes
 						//sélectionnées au hasard. On fait un emit pour chaque
 						//joueur.
 						Object.keys(dictJoueurs).forEach(id => {
 							var main = [];
-							for (var i = 0; i < 5; i++) {							
+							for (var i = 0; i < 5; i++) {
 								carteRnd = Math.floor(Math.random() * cartes.length);
 								main.push(cartes[carteRnd]);
+								cartes.splice(carteRnd, 1);
+								//Association d'un joueur avec sa main
+								dictMains[id] = main;
 							}
-						
-							io.to(dictJoueurs[id]).emit('cartes_pretes', main);					
-							
-						});					
 
-					
+							//Envoie à un seul joueur
+							io.to(dictJoueurs[id]).emit('cartes_pretes', main);
+						});
+
+						//Un fois les cartes distribuées, une carte est déposée sur le tapis par le serveur
+						carteRnd = Math.floor(Math.random() * cartes.length);
+						var carte = cartes[carteRnd];
+						tapis.push(carte);
+						console.log(carte);
+						cartes.splice(carteRnd, 1);
+						console.log(tapis);
+
+						//Envoie à tous les joueurs
+						io.sockets.to(id_partie).emit('serveur_carte',tapis);
+
+
+						//Pour que les cartes soient accessibles plus tard
+						tas = cartes;
+
+						//Le premier joueur du tableau (premier arrivé) commence son tour
+
 					}
 					else {
 						console.log("pas de cartes trouvés");
@@ -169,20 +190,6 @@ io.on('connection', function (socket) {
 
 		}
 
-		// if (id_partie in dict) {
-
-		// 	console.log(dict);
-		// 	console.log('utilisateur : ' + dict[id_partie]);
-		// }
-		// else if (dict[id_partie] == nb) {
-		// 	//On peut commencer les tours
-
-		// }
-		// else {
-		// 	dict[id_partie] = 1;
-		// 	console.log('Premier utilisateur');
-
-		// }
 
 		//ne fonctionne pas, le nb doit être dans l'async
 		//console.log("dans le async" + nb);
@@ -196,13 +203,6 @@ io.on('connection', function (socket) {
 	joueur.then(
 		joueur => {
 			if (joueur) {
-				//console.log("dans le then, joueur " + joueur);
-				// envoi au client à la connection (envoie d'évènement) (nous on renverrait l'id du joueur)
-				//Cet émit est attrapé par socket.on(start, callback) dans le client (chat)
-				// var data = {
-				// 	num_joueur: dict[id_partie],
-				// 	joueur: joueur
-				// }
 				socket.emit('start', {
 					num_joueur: dict[id_partie],
 					utilisateur: joueur.nom
@@ -229,16 +229,103 @@ io.on('connection', function (socket) {
 
 	// Gestion d'événement lancé depuis un socket
 	socket.on('chat', function (data) {
-		console.log('données reçues' + data);
-		// Réponse à tous les sockets
-		//io.sockets.emit('chat',data); -->si on veut envoyer l'événement à TOUS le monde, même ceux pas inclus dans la partie
-		// ci-dessous : + room
-		io.sockets.to(id_partie).emit('chat', data);		// Ici, on envoie le message seulement à ceux qui font partie de la id_partie
-		// ci-dessous : + namespace + room
-		//io.of('/').to('jeu').emit('chat',data);
+		//console.log('position de la carte : ' + data.position);
+		//console.log("contenu du tapis : " + tapis);
+		console.log("id joueur après déposer carte" + data.id_joueur);
+
+		//Récupération de la main du joueur et de sa carte choisie
+		var id_joueur = data.id_joueur;
+		var position = parseInt(data.position);
+		var nom = data.nom;
+		var main = dictMains[id_joueur];
+		var trouvee = false;
+
+		for (var i = 0; i < main.length && !trouvee; i++) {
+			if (main[i].cue == data.nomCarte) {
+				var carte = main[i];
+				trouvee = true;
+				console.log("trouvée!");
+			}
+		}
+		console.log("carte choisie : " + carte);
+		//Validation de la carte (on compare la réponse des cartes juxtaposées à
+		//celle déposée)
+
+		var blnReponse = true;
+		if (position == 0) {
+			if (carte.rep <= tapis[position].rep) {
+				console.log("bonne réponse!");
+			}
+			else {
+				console.log("Mauvaise réponse!");
+				blnReponse = false;
+			}
+
+
+		}
+
+		else if (position == tapis.length) {
+			if (carte.rep >= tapis[position - 1].rep) {
+				console.log("bonne réponse!");
+			}
+			else {
+				console.log("Mauvaise réponse!");
+				blnReponse = false;
+			}
+		}
+		else {
+			if (carte.rep >= tapis[position - 1].rep || carte.rep <= tapis[position].rep) {
+				console.log("bonne réponse!");
+			}
+
+			else {
+				console.log("Mauvaise réponse!");
+				blnReponse = false;
+			}
+		}
+
+
+		if (blnReponse) {
+
+			//La carte est ajoutée au tapis
+			tapis.splice(position, 0, carte);
+			io.sockets.to(id_partie).emit('serveur_carte',tapis);
+
+			//TODO : Décompte pour vérifier si le joueur a gagné
+
+
+		}
+		else {
+			//Une nouvelle carte est donnée au joueur.
+			carteRnd = Math.floor(Math.random() * tas.length);
+			var nouvCarte = tas[carteRnd]
+			dictMains[id_joueur].push(nouvCarte);
+			console.log("Nouvelle carte : " + nouvCarte);
+
+			//On retire du tas la carte donnée et on rajoute celle pour
+			//laquelle le joueur a eu une mauvaise réponse
+			tas.splice(carteRnd, 1, carte);
+
+		}
+
+		//Peu importe si la réponse est bonne, la carte est retirée de la main
+		//du joueur et on lui renvoie sa nouvelle main. Note : ne pas faire 
+		//main.splice, car c'est c'est une copie de la main contenue dans le dictionnaire
+		var index = main.indexOf(carte);
+		dictMains[id_joueur].splice(index, 1);
+		io.to(dictJoueurs[id_joueur]).emit('cartes_pretes', dictMains[id_joueur]);
+
+		io.sockets.to(id_partie).emit('serveur_reponse', {
+			blnReponse: blnReponse,
+			nom: nom
+		});
+
+
 	});
 
+	//taponnage 2
 	socket.on('taponnage', function (data) {
+		console.log("taponnage 2" + data);
 		// Réponse à tous les sockets hormis l'envoyeur
 		socket.broadcast.to(id_partie).emit('taponnage', data);
 		//socket.broadcast.emit('taponnage', data);
