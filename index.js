@@ -91,9 +91,11 @@ var cartes = getCartes();
 // App setup
 var app = express();
 
-var server = app.listen( process.env.PORT, function () {
-});
-
+var server = app.listen(process.env.PORT || 3000, function () {
+	var port = server.address().port;
+	console.log("Port :" + port);
+  });
+  
 // Static files
 app.use(express.static('public'));
 
