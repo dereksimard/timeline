@@ -10,7 +10,7 @@ var logger = require('morgan');
 var jwt = require('jsonwebtoken');
 
 // Création des handlers
-var index = require('./index.js');
+var index = require('./public/chat.js');
 var app = express();
 
 // view engine setup
