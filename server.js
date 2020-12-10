@@ -1,3 +1,5 @@
+"use strict";
+
 var express = require('express');
 var socket = require('socket.io');
 var mongoose = require('mongoose');
@@ -10,6 +12,7 @@ const CarteSchema = new mongoose.Schema({
 	show: String,
 	rep: Number
 });
+
 const UtilisateurSchema = new mongoose.Schema({
 	nom: {
 		type: String,
@@ -65,7 +68,6 @@ async function getJoueur(id_joueur) {
 	return await utilisateurModel.findById(id_joueur);
 }
 
-
 async function getNbJoueursPartie(id_partie) {
 	//Conversion de l'id de type String en ObjectId
 	var objId = mongoose.Types.ObjectId(id_partie);
@@ -86,7 +88,7 @@ var cartes = getCartes();
 
 // App setup
 var app = express();
-var server = app.listen(8000, function () {
+var server = app.listen(process.env.PORT || 3000, function () {
 	console.log("Service sur le port 8000");
 });
 
