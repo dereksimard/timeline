@@ -151,7 +151,7 @@ socket.on('serveur_carte', function (tapis) {
 socket.on('serveur_reponse', function (data) {
     if(data.blnVictoire){
         feedback.innerHTML = '<p><em>' + data.nom + 'a GAGNÉE la partie.' +'</em></p>';
-        btn.innerText = "Quitter la partie";
+        btn.innerHTML = '<a href="https://lotptimeline.herokuapp.com/connexion"/>';
         partieFini = true;
     }
     else{
