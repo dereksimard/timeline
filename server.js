@@ -85,11 +85,9 @@ async function getNbJoueursPartie(id_partie) {
 
 var cartes = getCartes();
 
-
 // App setup
 var app = express();
 var server = app.listen(process.env.PORT || 3000, function () {
-	console.log("Service sur le port 8000");
 });
 
 // Static files
@@ -119,9 +117,6 @@ io.on('connection', function (socket) {
 	//Obtention du nb de joueurs attendus
 	var promise = getNbJoueursPartie(id_partie);
 	var nbJoueurs;
-
-
-
 
 	dict[id_partie] = 0;
 
@@ -172,7 +167,6 @@ io.on('connection', function (socket) {
 						//Envoie à tous les joueurs
 						io.sockets.to(id_partie).emit('serveur_carte',tapis);
 
-
 						//Pour que les cartes soient accessibles plus tard
 						tas = cartes;
 
@@ -186,12 +180,8 @@ io.on('connection', function (socket) {
 				error => {
 					console.log(error);
 				}
-
-
 			);
-
 		}
-
 
 		//ne fonctionne pas, le nb doit être dans l'async
 		//console.log("dans le async" + nb);
@@ -200,7 +190,6 @@ io.on('connection', function (socket) {
 	//Obtention du joueur qui vient de se connecter pour obtenir son nom
 	//(fonction async)
 	var joueur = getJoueur(id_joueur);
-
 
 	joueur.then(
 		joueur => {
@@ -218,11 +207,6 @@ io.on('connection', function (socket) {
 			console.log(error);
 		}
 	);
-
-
-
-
-
 
 	// Optionnel : Attacher le socket à un espace nommé
 	//socket.join('jeu'); De cette façon, on permet à un certain utlisateur
@@ -254,6 +238,8 @@ io.on('connection', function (socket) {
 		//celle déposée)
 
 		var blnReponse = true;
+		var blnVictoire = false;
+
 		if (position == 0) {
 			if (carte.rep <= tapis[position].rep) {
 				console.log("bonne réponse!");
@@ -262,8 +248,6 @@ io.on('connection', function (socket) {
 				console.log("Mauvaise réponse!");
 				blnReponse = false;
 			}
-
-
 		}
 
 		else if (position == tapis.length) {
@@ -279,13 +263,11 @@ io.on('connection', function (socket) {
 			if (carte.rep >= tapis[position - 1].rep || carte.rep <= tapis[position].rep) {
 				console.log("bonne réponse!");
 			}
-
 			else {
 				console.log("Mauvaise réponse!");
 				blnReponse = false;
 			}
 		}
-
 
 		if (blnReponse) {
 
@@ -294,8 +276,10 @@ io.on('connection', function (socket) {
 			io.sockets.to(id_partie).emit('serveur_carte',tapis);
 
 			//TODO : Décompte pour vérifier si le joueur a gagné
-
-
+			if(dictMains[id_joueur].$size == 1){
+				//Victoire
+				blnVictoire = true;
+			}
 		}
 		else {
 			//Une nouvelle carte est donnée au joueur.
@@ -307,7 +291,6 @@ io.on('connection', function (socket) {
 			//On retire du tas la carte donnée et on rajoute celle pour
 			//laquelle le joueur a eu une mauvaise réponse
 			tas.splice(carteRnd, 1, carte);
-
 		}
 
 		//Peu importe si la réponse est bonne, la carte est retirée de la main
@@ -319,10 +302,9 @@ io.on('connection', function (socket) {
 
 		io.sockets.to(id_partie).emit('serveur_reponse', {
 			blnReponse: blnReponse,
-			nom: nom
+			nom: nom,
+			blnVictoire: blnVictoire
 		});
-
-
 	});
 
 	//taponnage 2

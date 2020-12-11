@@ -1,3 +1,5 @@
+"use strict";
+
 //Ce script va ramener le client vers index.js grâce à io.connection()
 
 //Récupération des éléments du DOM
@@ -18,6 +20,7 @@ var nomJoueur = document.getElementById('nomJoueur');
 
 //Autre variables
 var carteADeposer;
+var partieFini = false;
 
 function gererChoisirCarte(e) {
 
@@ -26,7 +29,7 @@ function gererChoisirCarte(e) {
 
     for (var carte of jeu.childNodes) {
         if (carte.classList.contains('selectionnee')) {
-            carte.classList.remove('selectionnee')
+            carte.classList.remove('selectionnee');
         }
     }
 
@@ -62,17 +65,23 @@ socket.on('start', function (data) {
 btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
-    socket.emit('chat', {
-        position: positionCarte.value,
-        nomCarte: carteADeposer,
-        id_joueur: id_joueur,
-        nom: nomJoueur.innerText
-    });
+    if(!partieFini){
+        if((positionCarte.valueb != null || positionCarte.value < 0) && carteADeposer != null){
+            socket.emit('chat', {
+                position: positionCarte.value,
+                nomCarte: carteADeposer,
+                id_joueur: id_joueur,
+                nom: nomJoueur.innerText
+            });
+        }
+    }
+    else{
+        location.href = "https://lotptimeline.herokuapp.com";
+    }
 });
 
 //taponnage 1
 positionCarte.addEventListener('keypress', function () {
-
     socket.emit('taponnage', nomJoueur.innerText);
 });
 
@@ -82,11 +91,9 @@ socket.on('chat', function (data) {
     output.innerHTML += '<p><strong>' + data.user + ': </strong>' + data.message + '</p>';
 });
 
-
 //taponnage 3
 //On indique au serveur qu'un utilisateur est en train de choisir une carte
 socket.on('taponnage', function (data) {
-
     feedback.innerHTML = '<p><em>' + data + ' choisit une carte...' + '</em></p>';
 });
 
@@ -107,7 +114,7 @@ socket.on('cartes_pretes', function (cartes) {
         li.addEventListener('click', gererChoisirCarte, false);
         jeu.appendChild(li);
     }    
-})
+});
 
 socket.on('serveur_carte', function (tapis) {
 
@@ -116,14 +123,13 @@ socket.on('serveur_carte', function (tapis) {
         output.removeChild(output.lastChild);
     }
 
-
     for (var i = 0; i < tapis.length; i++) {
         var li = document.createElement('li');
         li.classList.add("carte");
         var show = document.createElement('span');
         var rep = document.createElement('span');
         show.appendChild(document.createTextNode(tapis[i].show));
-        rep.appendChild(document.createTextNode(tapis[i].rep))
+        rep.appendChild(document.createTextNode(tapis[i].rep));
 
         li.appendChild(show);
         li.appendChild(rep);
@@ -133,32 +139,33 @@ socket.on('serveur_carte', function (tapis) {
         position.appendChild(document.createTextNode(i.toString()));
         output.appendChild(position);
         output.appendChild(li);
-        
     }
 
     //Ajout de la dernière position possible (celle la plus à droite)
     var dernPos = document.createElement('li');
     dernPos.classList.add('position');
     dernPos.appendChild(document.createTextNode(tapis.length.toString()));
-    output.appendChild(dernPos)
-
-
-})
+    output.appendChild(dernPos);
+});
 
 socket.on('serveur_reponse', function (data) {
-
-    if (data.blnReponse)
-        feedback.innerHTML = '<p><em>' + data.nom + ' a placé CORRECTEMENT sa carte.' + '</em></p>';
-    else
-        feedback.innerHTML = '<p><em>' + data.nom + ' a placé INCORRECTEMENT sa carte et en a pigé une nouvelle.' + '</em></p>';
-
-
-})
+    if(data.blnVictoire){
+        feedback.innerHTML = '<p><em>' + data.nom + 'a GAGNÉE la partie.' +'</em></p>';
+        btn.innerText = "Quitter la partie";
+        partieFini = true;
+    }
+    else{
+        if (data.blnReponse)
+            feedback.innerHTML = '<p><em>' + data.nom + ' a placé CORRECTEMENT sa carte.' + '</em></p>';
+        else
+            feedback.innerHTML = '<p><em>' + data.nom + ' a placé INCORRECTEMENT sa carte et en a pigé une nouvelle.' + '</em></p>';
+        }
+});
 
 socket.on('debut_tour', function () {
 
-})
+});
 
 socket.on('fin_tour', function () {
 
-})
+});
