@@ -116,7 +116,7 @@ io.on('connection', function (socket) {
 
 	//Obtention du nb de joueurs attendus
 	var promise = getNbJoueursPartie(id_partie);
-	var nb;
+	var nbJoueurs;
 
 
 
