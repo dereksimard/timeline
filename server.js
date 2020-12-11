@@ -260,7 +260,7 @@ io.on('connection', function (socket) {
 			}
 		}
 		else {
-			if (carte.rep >= tapis[position - 1].rep || carte.rep <= tapis[position].rep) {
+			if (carte.rep >= tapis[position - 1].rep && carte.rep <= tapis[position].rep) {
 				console.log("bonne réponse!");
 			}
 			else {
