@@ -254,6 +254,7 @@ io.on('connection', function (socket) {
 			//TODO : Décompte pour vérifier si le joueur a gagné
 			if (dictMains[id_joueur].$size == 1) {
 				//Victoire
+				console.log("reste:" + dictMains[id_joueur].$size + "donc victoire");
 				blnVictoire = true;
 			}
 		}
