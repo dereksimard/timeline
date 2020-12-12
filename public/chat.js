@@ -64,7 +64,7 @@ btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
     if (!partieFini) {
-        alert(Math.floor(output.children.length / 2);
+        alert(Math.floor(output.children.length / 2));
         if (carteADeposer == null) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
