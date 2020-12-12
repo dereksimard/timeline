@@ -160,7 +160,6 @@ socket.on('serveur_reponse', function (data) {
         }
 });
 
-
 //Indique au joueur que c'est son tour + débloque son bouton
 socket.on('mon_tour', function(){
     console.log("tours de ");
