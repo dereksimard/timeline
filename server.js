@@ -107,7 +107,6 @@ io.on('connection', function (socket) {
 
 	promesseNbJoueurs.then(result => {
 		nbJoueurs = result[0].nbJoueursAttendus;
-		tour = nbJoueurs-1;
 		//Si la clé id_joueur n'est pas dans le dictionnaire, on l'ajoute
 		//clé = id_joueur, valeur = socket
 		if (!(id_joueur in dictJoueurs)) {
@@ -138,6 +137,8 @@ io.on('connection', function (socket) {
 
 							//Envoie à un seul joueur
 							io.to(dictJoueurs[id]).emit('cartes_pretes', main);
+
+							io.to(dictJoueurs[id]).emit('mon_tour');
 						});
 
 						//Un fois les cartes distribuées, une carte est déposée sur le tapis par le serveur
@@ -150,13 +151,11 @@ io.on('connection', function (socket) {
 
 						//Envoie à tous les joueurs
 						io.sockets.to(id_partie).emit('serveur_carte', tapis);
+						
+						io.broadcast.to(id_partie).emit('son_tour');
 
 						//Pour que les cartes soient accessibles plus tard
 						tas = cartes;
-
-						//Le premier joueur du tableau (premier arrivé) commence son tour
-						io.to(dictJoueurs[tour]).emit('mon_tour');
-						io.broadcast.to(id_partie).emit('son_tour');
 					}
 					else {
 						console.log("Pas de cartes trouvés");
@@ -296,10 +295,10 @@ io.on('connection', function (socket) {
 
 		for(var y = 0; y < nbJoueurs;y++){
 			if (i == tour){
-				io.sockets.to(dictJoueurs[y]).emit('mon_tour');
+				io.to(dictJoueurs[y]).emit('mon_tour');
 			}
 			else{
-				io.sockets.to(dictJoueurs[y]).emit('son_tour');
+				io.to(dictJoueurs[y]).emit('son_tour');
 			}
 		}
 	});
