@@ -137,8 +137,6 @@ io.on('connection', function (socket) {
 
 							//Envoie à un seul joueur
 							io.to(dictJoueurs[id]).emit('cartes_pretes', main);
-
-							io.to(dictJoueurs[id]).emit('mon_tour');
 						});
 
 						//Un fois les cartes distribuées, une carte est déposée sur le tapis par le serveur
@@ -152,7 +150,7 @@ io.on('connection', function (socket) {
 						//Envoie à tous les joueurs
 						io.sockets.to(id_partie).emit('serveur_carte', tapis);
 						
-						io.broadcast.to(id_partie).emit('son_tour');
+						io.to(dictJoueurs[id_joueur]).emit('mon_tour');
 
 						//Pour que les cartes soient accessibles plus tard
 						tas = cartes;
