@@ -64,7 +64,7 @@ btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
     if(!partieFini){
-        if((positionCarte.value != null || positionCarte.value < 0 || positionCarte.value >= output.childNodes.length) && carteADeposer != null){
+        if((positionCarte.value != null || positionCarte.value < 0) && carteADeposer != null){
             socket.emit('chat', {
                 position: positionCarte.value,
                 nomCarte: carteADeposer,
