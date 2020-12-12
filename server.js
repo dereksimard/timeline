@@ -260,7 +260,7 @@ io.on('connection', function (socket) {
 		else {
 			//Une nouvelle carte est donnée au joueur.
 			carteRnd = Math.floor(Math.random() * tas.length);
-			var nouvCarte = tas[carteRnd]
+			var nouvCarte = tas[carteRnd];
 			dictMains[id_joueur].push(nouvCarte);
 			console.log("Nouvelle carte : " + nouvCarte);
 
@@ -296,7 +296,6 @@ io.on('connection', function (socket) {
 		console.log("tour de joueur:"+tour);
 	
 		io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
-
 	});
 
 	//taponnage 2
