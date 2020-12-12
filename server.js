@@ -300,7 +300,9 @@ io.on('connection', function (socket) {
 			tour = 0;
 		}
 		
-		for(var i = 0;i<nbJoueurs;i++){
+		console.log("tour de joueur:"+tour);
+
+		for(var i = 0; i < nbJoueurs;i++){
 			if (i == tour){
 				io.sockets.to(dictJoueurs[i]).emit('mon_tour');
 			}
