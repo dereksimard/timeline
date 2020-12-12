@@ -164,7 +164,10 @@ io.on('connection', function (socket) {
 			);//Fin résolution promesseCartes
 			Object.keys(dictJoueurs).forEach(id => {
 				for(var i = 0;i<nbJoueurs;i++){
-					joueurs.push(id);
+					if(!joueurs.$match(id))
+					{
+						joueurs.push(id);
+					}
 				}
 			});
 
