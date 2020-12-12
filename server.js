@@ -288,6 +288,8 @@ io.on('connection', function (socket) {
 			blnVictoire: blnVictoire
 		});
 		
+		console.log(joueurs);
+
 		io.to(dictJoueurs[joueurs[tour]]).emit('son_tour');
 
 		if(tour < nbJoueurs-1){
