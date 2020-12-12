@@ -158,13 +158,14 @@ io.on('connection', function (socket) {
 
 						for(var i = 0;i<nbJoueurs;i++){
 							if (i == tour){
+								console.log("tour:"+i);
 								io.sockets.to(dictJoueurs[i]).emit('mon_tour');
 							}
 							else{
+								console.log("pas tour:" + i);
 								io.sockets.to(dictJoueurs[i]).emit('son_tour');
 							}
 						}
-
 					}
 					else {
 						console.log("Pas de cartes trouvés");
@@ -302,12 +303,12 @@ io.on('connection', function (socket) {
 		
 		console.log("tour de joueur:"+tour);
 
-		for(var i = 0; i < nbJoueurs;i++){
+		for(var y = 0; y < nbJoueurs;y++){
 			if (i == tour){
-				io.sockets.to(dictJoueurs[i]).emit('mon_tour');
+				io.sockets.to(dictJoueurs[y]).emit('mon_tour');
 			}
 			else{
-				io.sockets.to(dictJoueurs[i]).emit('son_tour');
+				io.sockets.to(dictJoueurs[y]).emit('son_tour');
 			}
 		}
 	});
