@@ -162,18 +162,17 @@ io.on('connection', function (socket) {
 					console.log(error);
 				}
 			);//Fin résolution promesseCartes
-			Object.keys(dictJoueurs).forEach(id => {
-				for(var i = 0;i<nbJoueurs;i++){
-					console.log("emplacement:"+i+" = "+id);
-					joueurs.push(id);
-				}
-			});
-
-			io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
 		}
-
-
 	});//Fin résolution promesseNbJoueurs
+
+	Object.keys(dictJoueurs).forEach(id => {
+		for(var i = 0;i<nbJoueurs;i++){
+			console.log("emplacement:"+i+" = "+id);
+			joueurs.push(id);
+		}
+	});
+
+	io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
 
 	//Obtention du joueur qui vient de se connecter pour obtenir son nom
 	//(fonction async)
