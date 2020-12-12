@@ -90,6 +90,7 @@ var tapis = [];
 var tas;
 var nbJoueurs;
 var tour = 0;
+var carteRnd;
 
 // Lancement du Socket : événement, fonction de rappel
 io.on('connection', function (socket) {
@@ -122,7 +123,6 @@ io.on('connection', function (socket) {
 				cartes => {
 					if (cartes) {
 
-						var carteRnd;
 						//Pour chaque joueur, on crée une main avec des cartes
 						//sélectionnées au hasard. On fait un emit pour chaque
 						//joueur.
