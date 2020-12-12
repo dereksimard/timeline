@@ -43,14 +43,14 @@ h2 {
     min-width: 100px;
 
 }
-
+#message_erreur p{
+     color:red;
+}
 #feedback {
     position: absolute;
     bottom: 0;
 }
-#feedback.invalide p{
-     color:red;
-}
+
 
 #feedback p {
     color: blue;
