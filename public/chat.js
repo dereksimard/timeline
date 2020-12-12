@@ -64,7 +64,7 @@ btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
     if (!partieFini) {
-
+        alert(positionCarte.value);
         if (carteADeposer == null) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
@@ -92,7 +92,7 @@ btn.addEventListener('click', function () {
 //taponnage 1
 positionCarte.addEventListener('keypress', function () {
     feedback.classList.remove('invalide');
-    alert(positionCarte.value);
+   
     socket.emit('taponnage', nomJoueur.innerText);
 });
 
