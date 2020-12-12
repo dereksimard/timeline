@@ -162,14 +162,12 @@ socket.on('serveur_reponse', function (data) {
 
 //Indique au joueur que c'est son tour + débloque son bouton
 socket.on('mon_tour', function(){
-    console.log("tours de ");
     feedback.innerHTML = '<p>C\'est <strong>VOTRE</strong> tour.</p>';
     btn.disabled = false;
 });
 
 //Indique aux joueurs que c'est le tour de quelqu'un + bloque leur bouton
 socket.on('son_tour', function(){
-    console.log("pas tours de ");
     feedback.innerHTML = '<p>Ce <strong>N\'EST PAS</strong> votre tour.</p>';
     btn.disabled = true;
 });
