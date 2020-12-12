@@ -89,7 +89,7 @@ var dictMains = {};
 var tapis = [];
 var tas;
 var nbJoueurs;
-
+var tour = 0;
 
 // Lancement du Socket : événement, fonction de rappel
 io.on('connection', function (socket) {
@@ -103,7 +103,6 @@ io.on('connection', function (socket) {
 	//Obtention du nb de joueurs attendus
 	var promesseNbJoueurs = getNbJoueursPartie(id_partie);
 	var promesseCartes = getCartes();
-
 
 	promesseNbJoueurs.then(result => {
 		nbJoueurs = result[0].nbJoueursAttendus;
@@ -156,6 +155,15 @@ io.on('connection', function (socket) {
 						tas = cartes;
 
 						//Le premier joueur du tableau (premier arrivé) commence son tour
+
+						for(var i = 0;i<nbJoueurs;i++){
+							if (i == tour){
+								io.sockets.to(dictJoueurs[i]).emit('mon_tour');
+							}
+							else{
+								io.sockets.to(dictJoueurs[i]).emit('son_tour');
+							}
+						}
 
 					}
 					else {
@@ -284,6 +292,22 @@ io.on('connection', function (socket) {
 			nom: nom,
 			blnVictoire: blnVictoire
 		});
+		
+		if(tour < nbJoueurs-1){
+			tour++;
+		}
+		else{
+			tour = 0;
+		}
+		
+		for(var i = 0;i<nbJoueurs;i++){
+			if (i == tour){
+				io.sockets.to(dictJoueurs[i]).emit('mon_tour');
+			}
+			else{
+				io.sockets.to(dictJoueurs[i]).emit('son_tour');
+			}
+		}
 	});
 
 	//taponnage 2
