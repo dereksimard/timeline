@@ -64,15 +64,17 @@ btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
     if (!partieFini) {
-        alert(positionCarte.value);
+        alert("valeur de la position"+positionCarte.value);
+        alert("valeur de la carte"+carteADeposer);
+
         if (carteADeposer == null) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
             feedback.classList.add('invalide');
         }
-        else if (positionCarte.value != null || positionCarte.value < 0) {
+        else if (positionCarte.value != null || positionCarte.value < 0 || positionCarte >Math.floor(output.children.length) ) {
             //La position donné est invalide
-            feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
+            feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
             feedback.classList.add('invalide');
         }
         else {
