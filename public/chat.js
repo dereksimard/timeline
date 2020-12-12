@@ -63,8 +63,7 @@ socket.on('start', function (data) {
 // Lorsqu'une carte est choisie
 btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
-    //la position où il veut la déposer
-    if (!partieFini) {      
+    //la position où il veut la déposer    
         
         if (carteADeposer == null) {
             //La position donné est invalide
@@ -86,10 +85,7 @@ btn.addEventListener('click', function () {
                 nom: nomJoueur.innerText
             });
         }
-    }
-    else {
-        location.href = "https://lotptimeline.herokuapp.com";
-    }
+    
 });
 
 //taponnage 1
@@ -159,7 +155,8 @@ socket.on('serveur_carte', function (tapis) {
 socket.on('serveur_reponse', function (data) {
     if (data.blnVictoire) {
         feedback.innerHTML = '<p><em>' + data.nom + 'a GAGNÉE la partie.' + '</em></p>';
-        btn.innerHTML = '<a href="https://lotptimeline.herokuapp.com/connexion"/>';
+        btn.innerText = "Partie fini";
+        btn.setAttribute('disabled','disabled');
         partieFini = true;
     }
     else {
