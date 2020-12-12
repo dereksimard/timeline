@@ -49,6 +49,8 @@ h2 {
 }
 #message_erreur p{
      color:red;
+     padding: 14px 0px;
+     margin: 0 20px;
 }
 
 
