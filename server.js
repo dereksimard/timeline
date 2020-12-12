@@ -252,8 +252,10 @@ io.on('connection', function (socket) {
 			io.sockets.to(id_partie).emit('serveur_carte', tapis);
 
 			//TODO : Décompte pour vérifier si le joueur a gagné
-			if (dictMains[id_joueur].$size == 1) {
+			console.log(Object.keys(dictMains[id_joueur]).length);
+			if (Object.keys(dictMains[id_joueur]).length == 1) {
 				//Victoire
+				console.log("reste:" + dictMains[id_joueur].$size + "donc victoire");
 				blnVictoire = true;
 			}
 		}
@@ -284,7 +286,8 @@ io.on('connection', function (socket) {
 		
 		console.log(joueurs);
 
-		io.to(dictJoueurs[joueurs[tour]]).emit('son_tour');
+		if(!blnVictoire){
+			io.to(dictJoueurs[joueurs[tour]]).emit('son_tour');
 
 		if(tour < nbJoueurs-1){
 			tour++;
@@ -296,6 +299,7 @@ io.on('connection', function (socket) {
 		console.log("tour de joueur:"+tour);
 	
 		io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
+		}
 	});
 
 	//taponnage 2
