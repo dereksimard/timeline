@@ -63,8 +63,7 @@ socket.on('start', function (data) {
 btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
-    if (!partieFini) {
-        // alert(Math.floor(output.children.length / 2) + "type =" + typeof positionCarte.value);
+       // alert(Math.floor(output.children.length / 2) + "type =" + typeof positionCarte.value);
         
         if (carteADeposer == null) {
             //La position donné est invalide
@@ -72,7 +71,7 @@ btn.addEventListener('click', function () {
             feedback.classList.add('invalide');
             console.log(" carte est nulle");
         }
-        else if (positionCarte.value != null || positionCarte.value < 0 || positionCarte > Math.floor(output.children.length / 2)) {
+        else if (positionCarte.value == null || positionCarte.value < 0 || positionCarte > Math.floor(output.children.length / 2)) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
             feedback.classList.add('invalide');
@@ -88,10 +87,7 @@ btn.addEventListener('click', function () {
                 nom: nomJoueur.innerText
             });
         }
-    }
-    else {
-        location.href = "https://lotptimeline.herokuapp.com";
-    }
+    
 });
 
 //taponnage 1
@@ -161,7 +157,8 @@ socket.on('serveur_carte', function (tapis) {
 socket.on('serveur_reponse', function (data) {
     if (data.blnVictoire) {
         feedback.innerHTML = '<p><em>' + data.nom + 'a GAGNÉE la partie.' + '</em></p>';
-        btn.innerHTML = '<a href="https://lotptimeline.herokuapp.com/connexion"/>';
+        btn.innerText = "Partie fini";
+        btn.setAttribute('disabled','disabled');
         partieFini = true;
     }
     else {
