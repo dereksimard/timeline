@@ -114,6 +114,7 @@ io.on('connection', function (socket) {
 
 			dictJoueurs[id_joueur] = socket.id;
 			console.log("Le joueur " + id_joueur + " a le socket " + socket.id);
+			joueurs.push(id_joueur);
 
 		}
 
@@ -164,11 +165,6 @@ io.on('connection', function (socket) {
 			);//Fin résolution promesseCartes
 		}
 	});//Fin résolution promesseNbJoueurs
-
-	Object.keys(dictJoueurs).forEach(id => {
-			console.log("emplacement = "+id);
-			joueurs.push(id);
-	});
 
 	io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
 
