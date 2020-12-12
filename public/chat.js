@@ -63,14 +63,14 @@ socket.on('start', function (data) {
 btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
-    if (!partieFini) {       
-
+    if (!partieFini) {
+        alert(Math.floor(output.children.length / 2);
         if (carteADeposer == null) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
             feedback.classList.add('invalide');
         }
-        else if (positionCarte.value != null || positionCarte.value < 0 || positionCarte >Math.floor(output.children.length/2) ) {
+        else if (positionCarte.value != null || positionCarte.value < 0 || positionCarte > Math.floor(output.children.length / 2)) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
             feedback.classList.add('invalide');
@@ -92,7 +92,7 @@ btn.addEventListener('click', function () {
 //taponnage 1
 positionCarte.addEventListener('keypress', function () {
     feedback.classList.remove('invalide');
-   
+    feedback.innerHTML = "";
     socket.emit('taponnage', nomJoueur.innerText);
 });
 
