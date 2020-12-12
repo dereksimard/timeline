@@ -172,3 +172,8 @@ socket.on('son_tour', function(){
     btn.disabled = true;
 });
 
+socket.on('tour', function(){
+    feedback.innerHTML = '<p>Ce <strong>N\'EST PAS</strong> votre tour.</p>';
+    btn.disabled = true;
+});
+
