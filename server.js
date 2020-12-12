@@ -87,6 +87,7 @@ var io = socket(server);
 var dictJoueurs = {};
 var dictMains = {};
 var tapis = [];
+var joueurs = [];
 var tas;
 var nbJoueurs;
 var tour = 0;
@@ -149,8 +150,6 @@ io.on('connection', function (socket) {
 
 						//Envoie à tous les joueurs
 						io.sockets.to(id_partie).emit('serveur_carte', tapis);
-						
-						io.to(dictJoueurs[id_joueur]).emit('mon_tour');
 
 						//Pour que les cartes soient accessibles plus tard
 						tas = cartes;
@@ -163,6 +162,13 @@ io.on('connection', function (socket) {
 					console.log(error);
 				}
 			);//Fin résolution promesseCartes
+			Object.keys(dictJoueurs).forEach(id => {
+				for(var i = 0;i<nbJoueurs;i++){
+					joueurs.push(id);
+				}
+			});
+
+			io.to(joueurs[tour]).emit('mon_tour');
 		}
 
 
@@ -290,15 +296,11 @@ io.on('connection', function (socket) {
 		}
 		
 		console.log("tour de joueur:"+tour);
+		
+		io.to(dictJoueurs[id_joueur]).emit('son_tour');
 
-		for(var y = 0; y < nbJoueurs;y++){
-			if (i == tour){
-				io.to(dictJoueurs[y]).emit('mon_tour');
-			}
-			else{
-				io.to(dictJoueurs[y]).emit('son_tour');
-			}
-		}
+		io.to(joueurs[tour]).emit('mon_tour');
+
 	});
 
 	//taponnage 2
