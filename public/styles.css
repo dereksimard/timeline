@@ -146,3 +146,9 @@ button:hover{
     background: #a4a6cf;
 
 }
+button[disabled=true]{
+    background-color: grey;
+}
+button[disabled=true]:hover{
+    background-color: grey;
+}
