@@ -156,7 +156,7 @@ io.on('connection', function (socket) {
 
 						//Le premier joueur du tableau (premier arrivé) commence son tour
 
-						io.to(dictJoueurs).emit('mon_tour');
+						io.to(socket).emit('mon_tour');
 						io.broadcast.to(dictJoueurs).emit('son_tour');
 					}
 					else {
