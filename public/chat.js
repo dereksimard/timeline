@@ -3,6 +3,7 @@
 //Ce script va ramener le client vers index.js grâce à io.connection()
 var log = document.getElementById('log');
 var message_erreur = document.getElementById('message_erreur');
+var message_tour = document.getElementById('message_tour');
 //Récupération des éléments du DOM
 var positionCarte = document.getElementById('positionCarte');
 var btn = document.getElementById('send');
@@ -154,8 +155,8 @@ socket.on('serveur_carte', function (tapis) {
 
 socket.on('serveur_reponse', function (data) {
     if (data.blnVictoire) {
-        feedback.innerHTML = '<p><em>' + data.nom + 'a GAGNÉE la partie.' + '</em></p>';
-        btn.innerText = "Partie fini";
+        feedback.innerHTML = '<p><em>' + data.nom + ' a GAGNÉ la partie.' + '</em></p>';
+        btn.innerText = "Partie finie";
         btn.setAttribute('disabled','disabled');
         partieFini = true;
     }
@@ -169,13 +170,13 @@ socket.on('serveur_reponse', function (data) {
 
 //Indique au joueur que c'est son tour + débloque son bouton
 socket.on('mon_tour', function () {
-    feedback.innerHTML = '<p>C\'est <strong>VOTRE</strong> tour.</p>';
+    message_tour.innerHTML = '<p>C\'est <strong>VOTRE</strong> tour.</p>';
     btn.removeAttribute('disabled');
 });
 
 //Indique aux joueurs que c'est le tour de quelqu'un + bloque leur bouton
 socket.on('son_tour', function () {
-    feedback.innerHTML = '<p>Ce <strong>N\'EST PAS</strong> votre tour.</p>';
+    message_tour.innerHTML = '<p>Ce <strong>N\'EST PAS</strong> votre tour.</p>';
     btn.setAttribute('disabled', 'disabled');
 });
 
