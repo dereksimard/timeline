@@ -286,7 +286,8 @@ io.on('connection', function (socket) {
 		
 		console.log(joueurs);
 
-		io.to(dictJoueurs[joueurs[tour]]).emit('son_tour');
+		if(!blnVictoire){
+			io.to(dictJoueurs[joueurs[tour]]).emit('son_tour');
 
 		if(tour < nbJoueurs-1){
 			tour++;
@@ -298,6 +299,7 @@ io.on('connection', function (socket) {
 		console.log("tour de joueur:"+tour);
 	
 		io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
+		}
 	});
 
 	//taponnage 2
