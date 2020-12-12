@@ -252,7 +252,7 @@ io.on('connection', function (socket) {
 			io.sockets.to(id_partie).emit('serveur_carte', tapis);
 
 			//TODO : Décompte pour vérifier si le joueur a gagné
-
+			console.log(Object.keys(dictMains[id_joueur]).length);
 			if (Object.keys(dictMains[id_joueur]).length == 1) {
 				//Victoire
 				console.log("reste:" + dictMains[id_joueur].$size + "donc victoire");
