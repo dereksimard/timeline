@@ -163,13 +163,13 @@ socket.on('serveur_reponse', function (data) {
 //Indique au joueur que c'est son tour + débloque son bouton
 socket.on('mon_tour', function(){
     feedback.innerHTML = '<p>C\'est <strong>VOTRE</strong> tour.</p>';
-    btn.disabled = false;
+    btn.removeAttribute('disabled');
 });
 
 //Indique aux joueurs que c'est le tour de quelqu'un + bloque leur bouton
 socket.on('son_tour', function(){
     feedback.innerHTML = '<p>Ce <strong>N\'EST PAS</strong> votre tour.</p>';
-    btn.disabled = true;
+    btn.setAttribute('disabled', 'disabled');
     alert("ce n'Est pas mon tour");
 });
 
