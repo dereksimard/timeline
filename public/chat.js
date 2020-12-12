@@ -1,6 +1,7 @@
 "use strict";
 
 //Ce script va ramener le client vers index.js grâce à io.connection()
+var log = document.getElementById('log');
 
 //Récupération des éléments du DOM
 var positionCarte = document.getElementById('positionCarte');
@@ -70,16 +71,16 @@ btn.addEventListener('click', function () {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
             feedback.classList.add('invalide');
-            console.log(" carte est nulle");
+            log.innerText(" carte est nulle");
         }
         else if (positionCarte.value != null || positionCarte.value < 0 || positionCarte > Math.floor(output.children.length / 2)) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
             feedback.classList.add('invalide');
-            console.log("position invalide = " + positionCarte.value);
+            log.innerText("position invalide = " + positionCarte.value);
         }
         else {
-            console.log("valide = " + positionCarte.value);
+            log.innerText("valide = " + positionCarte.value);
 
             socket.emit('chat', {
                 position: positionCarte.value,
