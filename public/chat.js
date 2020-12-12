@@ -1,7 +1,8 @@
 "use strict";
 
 //Ce script va ramener le client vers index.js grâce à io.connection()
-
+var log = document.getElementById('log');
+var message_erreur = document.getElementById('message_erreur');
 //Récupération des éléments du DOM
 var positionCarte = document.getElementById('positionCarte');
 var btn = document.getElementById('send');
@@ -62,23 +63,22 @@ socket.on('start', function (data) {
 // Lorsqu'une carte est choisie
 btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
-    //la position où il veut la déposer
-       // alert(Math.floor(output.children.length / 2) + "type =" + typeof positionCarte.value);
+    //la position où il veut la déposer    
         
         if (carteADeposer == null) {
             //La position donné est invalide
-            feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
-            feedback.classList.add('invalide');
-            console.log(" carte est nulle");
+            message_erreur.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
+            message_erreur.classList.add('invalide');
+            log.innerText=" carte est nulle";
         }
-        else if (positionCarte.value == null || positionCarte.value < 0 || positionCarte > Math.floor(output.children.length / 2)) {
+        else if (positionCarte.value != null && (positionCarte.value < 0 || positionCarte.value > Math.floor(output.children.length / 2))) {
             //La position donné est invalide
-            feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
-            feedback.classList.add('invalide');
-            console.log("position invalide = " + positionCarte.value);
+            message_erreur.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
+            message_erreur.classList.add('invalide');
+            log.innerText = "position invalide = " + positionCarte.value;
         }
         else {
-            console.log("valide = " + positionCarte.value);
+            log.innerText = "valide = " + positionCarte.value;
 
             socket.emit('chat', {
                 position: positionCarte.value,
@@ -92,8 +92,8 @@ btn.addEventListener('click', function () {
 
 //taponnage 1
 positionCarte.addEventListener('keypress', function () {
-    feedback.classList.remove('invalide');
-    feedback.innerHTML = "";
+    
+    message_erreur.innerHTML = "";
     socket.emit('taponnage', nomJoueur.innerText);
 });
 
