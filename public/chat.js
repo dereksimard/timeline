@@ -1,23 +1,13 @@
 "use strict";
-
-//Ce script va ramener le client vers index.js grâce à io.connection()
-var log = document.getElementById('log');
+//Récupération des éléments du DOM
 var message_erreur = document.getElementById('message_erreur');
 var message_tour = document.getElementById('message_tour');
-//Récupération des éléments du DOM
 var positionCarte = document.getElementById('positionCarte');
 var btn = document.getElementById('send');
-
-//ul
-var output = document.getElementById('output');
-
+var output = document.getElementById('output');// est un ul
 var feedback = document.getElementById('feedback');
 var titre = document.getElementById('titre');
-
-//ul
-var jeu = document.getElementById('jeu');
-
-
+var jeu = document.getElementById('jeu');//est un ul
 var nomJoueur = document.getElementById('nomJoueur');
 
 //Autre variables
@@ -69,16 +59,14 @@ btn.addEventListener('click', function () {
         if (carteADeposer == null) {
             //La position donné est invalide
             message_erreur.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';          
-            log.innerText=" carte est nulle";
+         
         }
         else if (positionCarte.value != null && (positionCarte.value < 0 || positionCarte.value > Math.floor(output.children.length / 2))) {
             //La position donné est invalide
             message_erreur.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';           
-            log.innerText = "position invalide = " + positionCarte.value;
+          
         }
-        else {
-            log.innerText = "valide = " + positionCarte.value;
-
+        else {         
             socket.emit('chat', {
                 position: positionCarte.value,
                 nomCarte: carteADeposer,
