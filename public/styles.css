@@ -43,6 +43,10 @@ h2 {
     min-width: 100px;
 
 }
+#messages{
+    position:absolution;
+    bottom:0;
+}
 #message_erreur p{
      color:red;
 }
