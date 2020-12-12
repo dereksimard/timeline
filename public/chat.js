@@ -68,14 +68,12 @@ btn.addEventListener('click', function () {
         
         if (carteADeposer == null) {
             //La position donné est invalide
-            message_erreur.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
-            message_erreur.classList.add('invalide');
+            message_erreur.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';          
             log.innerText=" carte est nulle";
         }
         else if (positionCarte.value != null && (positionCarte.value < 0 || positionCarte.value > Math.floor(output.children.length / 2))) {
             //La position donné est invalide
-            message_erreur.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
-            message_erreur.classList.add('invalide');
+            message_erreur.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';           
             log.innerText = "position invalide = " + positionCarte.value;
         }
         else {
