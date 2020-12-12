@@ -73,7 +73,7 @@ btn.addEventListener('click', function () {
             feedback.classList.add('invalide');
             log.innerText(" carte est nulle");
         }
-        else if (positionCarte.value != null || positionCarte.value < 0 || positionCarte > Math.floor(output.children.length / 2)) {
+        else if (positionCarte.value != null && (positionCarte.value < 0 || positionCarte > Math.floor(output.children.length / 2))) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
             feedback.classList.add('invalide');
