@@ -156,8 +156,8 @@ io.on('connection', function (socket) {
 
 						//Le premier joueur du tableau (premier arrivé) commence son tour
 
-						io.sockets.to(dictJoueurs).emit('mon_tour');
-						io.sockets.broadcast.to(dictJoueurs).emit('son_tour');
+						io.to(dictJoueurs).emit('mon_tour');
+						io.broadcast.to(dictJoueurs).emit('son_tour');
 					}
 					else {
 						console.log("Pas de cartes trouvés");
