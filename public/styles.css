@@ -1,9 +1,11 @@
 body {
     font-family: 'Nunito';
 }
-h1{
+
+h1 {
     text-align: center;
 }
+
 h2 {
     font-size: 18px;
     padding: 10px 20px;
@@ -43,18 +45,21 @@ h2 {
     min-width: 100px;
 
 }
-#messages{
-    position:absolute;
-    bottom:0;
+
+#messages {
+    position: absolute;
+    bottom: 0;
 }
-#message_erreur p{
-     color:red;
-     padding: 14px 0px;
-     margin: 0 20px;
+
+#message_erreur p {
+    color: red;
+    padding: 14px 0px;
+    margin: 0 20px;
 }
 
 
-#feedback p, #message_tour {
+#feedback p,
+#message_tour {
     color: blue;
     padding: 14px 0px;
     margin: 0 20px;
@@ -68,11 +73,13 @@ h2 {
 
     justify-content: center;
 }
-#nomJoueur{
+
+#nomJoueur {
     font-weight: bold;
     display: inline-block;
-
+    margin-left: 20px;
 }
+
 #jeu {
     height: 200px;
     overflow: auto;
@@ -96,13 +103,15 @@ h2 {
     display: flex;
     flex-direction: column;
 }
-#jeu .carte:hover{
+
+#jeu .carte:hover {
     background-color: #575ed8;
-    color:white;
+    color: white;
 }
-.carte.selectionnee{
+
+.carte.selectionnee {
     background-color: #575ed8;
-    color:white;
+    color: white;
 }
 
 .carte span {
@@ -144,13 +153,16 @@ button {
     width: 100%;
     border-radius: 0 0 2px 2px;
 }
-button:hover{
+
+button:hover {
     background: #a4a6cf;
 
 }
-button[disabled=disabled]{
+
+button[disabled=disabled] {
     background-color: grey;
 }
-button[disabled=disabled]:hover{
+
+button[disabled=disabled]:hover {
     background-color: grey;
 }
