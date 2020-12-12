@@ -168,7 +168,7 @@ io.on('connection', function (socket) {
 				}
 			});
 
-			io.to(joueurs[tour]).emit('mon_tour');
+			io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
 		}
 
 
@@ -299,7 +299,7 @@ io.on('connection', function (socket) {
 		
 		io.to(dictJoueurs[id_joueur]).emit('son_tour');
 
-		io.to(joueurs[tour]).emit('mon_tour');
+		io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
 
 	});
 
