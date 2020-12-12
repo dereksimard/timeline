@@ -15,7 +15,7 @@ var titre = document.getElementById('titre');
 //ul
 var jeu = document.getElementById('jeu');
 
-var numJoueur = document.getElementById('numJoueur');
+
 var nomJoueur = document.getElementById('nomJoueur');
 
 //Autre variables
@@ -57,8 +57,7 @@ var socket = io.connect(path.toString());
 
 //Affichage de l'id du joueur
 socket.on('start', function (data) {
-    nomJoueur.innerText = data.utilisateur;
-    numJoueur.innerText = 'Joueur ' + data.num_joueur + " - ";
+    nomJoueur.innerText = data.utilisateur;   
 });
 
 // Lorsqu'une carte est choisie

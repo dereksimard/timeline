@@ -47,8 +47,7 @@ mongoose.connect('mongodb+srv://admin:admin123@timeline.9e4sd.mongodb.net/timeli
 	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
 var db = mongoose.connection;
 
-//Déclarations
-var nbTours = 0;
+
 
 async function getCartes() {
 	var tab_cartes = []
@@ -72,18 +71,9 @@ async function getNbJoueursPartie(id_partie) {
 	//Conversion de l'id de type String en ObjectId
 	var objId = mongoose.Types.ObjectId(id_partie);
 	return partieModel.aggregate([{ $match: { _id: objId } }, { $project: { nbJoueursAttendus: { $size: '$invites' }, _id: 0 } }]);
-
-	// await promise.then(
-	// 	result=>{
-	// 		console.log("dans la fonction" + result);
-	// 		return result;
-	// 	},
-	// 	error=>{}
-	// );
-	//return nbJoueursAttendus;
 }
 
-var cartes = getCartes();
+
 
 // App setup
 var app = express();
@@ -98,13 +88,12 @@ app.use(express.static('public'));
 // Instanciation du Socket
 var io = socket(server);
 
-var dict = {};
-
+//Déclarations
 var dictJoueurs = {};
 var dictMains = {};
 var tapis = [];
 var tas;
-
+var nbJoueurs;
 // Lancement du Socket : événement, fonction de rappel
 io.on('connection', function (socket) {
 
@@ -115,26 +104,26 @@ io.on('connection', function (socket) {
 	var id_joueur = socket.handshake.query['id_joueur'];
 
 	//Obtention du nb de joueurs attendus
-	var promise = getNbJoueursPartie(id_partie);
-	var nbJoueurs;
+	var promesseNbJoueurs = getNbJoueursPartie(id_partie);
+	var promesseCartes = getCartes();
 
-	dict[id_partie] = 0;
 
-	promise.then(result => {
+
+	promesseNbJoueurs.then(result => {
 		nbJoueurs = result[0].nbJoueursAttendus;
 
 		//Si la clé id_joueur n'est pas dans le dictionnaire, on l'ajoute
 		//clé = id_joueur, valeur = socket
 		if (!(id_joueur in dictJoueurs)) {
-			dict[id_partie] += 1;
+
 			dictJoueurs[id_joueur] = socket.id;
-			console.log("Le joueur " + dict[id_partie] + " est " + id_joueur + "et a le socket " + socket.id);
+			console.log("Le joueur " + id_joueur + " a le socket " + socket.id);
 
 		}
-		console.log("    ");
+
 		if (Object.keys(dictJoueurs).length == nbJoueurs) {
 			//Tout le monde est là, on peut distribuer les cartes
-			cartes.then(
+			promesseCartes.then(
 				cartes => {
 					if (cartes) {
 
@@ -165,7 +154,7 @@ io.on('connection', function (socket) {
 						console.log(tapis);
 
 						//Envoie à tous les joueurs
-						io.sockets.to(id_partie).emit('serveur_carte',tapis);
+						io.sockets.to(id_partie).emit('serveur_carte', tapis);
 
 						//Pour que les cartes soient accessibles plus tard
 						tas = cartes;
@@ -174,34 +163,28 @@ io.on('connection', function (socket) {
 
 					}
 					else {
-						console.log("pas de cartes trouvés");
+						console.log("Pas de cartes trouvés");
 					}
 				},
 				error => {
 					console.log(error);
 				}
-			);
+			);//Fin résolution promesseCartes
 		}
 
-		//ne fonctionne pas, le nb doit être dans l'async
-		//console.log("dans le async" + nb);
-	});
+
+	});//Fin résolution promesseNbJoueurs
 
 	//Obtention du joueur qui vient de se connecter pour obtenir son nom
 	//(fonction async)
-	var joueur = getJoueur(id_joueur);
+	var promesseJoueur = getJoueur(id_joueur);
 
-	joueur.then(
+	promesseJoueur.then(
 		joueur => {
-			if (joueur) {
-				socket.emit('start', {
-					num_joueur: dict[id_partie],
-					utilisateur: joueur.nom
-				});
-			}
-			else {
-				console.log("pas de joueur trouvé");
-			}
+			if (joueur)
+				socket.emit('start', { utilisateur: joueur.nom });
+			else
+				console.log("Pas de joueur trouvé");
 		},
 		error => {
 			console.log(error);
@@ -273,10 +256,10 @@ io.on('connection', function (socket) {
 
 			//La carte est ajoutée au tapis
 			tapis.splice(position, 0, carte);
-			io.sockets.to(id_partie).emit('serveur_carte',tapis);
+			io.sockets.to(id_partie).emit('serveur_carte', tapis);
 
 			//TODO : Décompte pour vérifier si le joueur a gagné
-			if(dictMains[id_joueur].$size == 1){
+			if (dictMains[id_joueur].$size == 1) {
 				//Victoire
 				blnVictoire = true;
 			}
