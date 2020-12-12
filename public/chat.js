@@ -56,15 +56,26 @@ var socket = io.connect(path.toString());
 
 //Affichage du nom du joueur
 socket.on('start', function (data) {
-    nomJoueur.innerText = data.utilisateur;   
+    nomJoueur.innerText = data.utilisateur;
 });
 
 // Lorsqu'une carte est choisie
 btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
-    if(!partieFini){
-        if((positionCarte.value != null || positionCarte.value < 0) && carteADeposer != null){
+    if (!partieFini) {
+
+        if (carteADeposer == null) {
+            //La position donné est invalide
+            feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
+            feedback.classList.add('invalide');
+        }
+        else if (positionCarte.value != null || positionCarte.value < 0) {
+            //La position donné est invalide
+            feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
+            feedback.classList.add('invalide');
+        }
+        else {
             socket.emit('chat', {
                 position: positionCarte.value,
                 nomCarte: carteADeposer,
@@ -72,13 +83,8 @@ btn.addEventListener('click', function () {
                 nom: nomJoueur.innerText
             });
         }
-        else{
-            //La position donné est invalide
-            feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
-            feedback.classList.add('invalide');
-        }
     }
-    else{
+    else {
         location.href = "https://lotptimeline.herokuapp.com";
     }
 });
@@ -86,6 +92,7 @@ btn.addEventListener('click', function () {
 //taponnage 1
 positionCarte.addEventListener('keypress', function () {
     feedback.classList.remove('invalide');
+    alert(positionCarte.value);
     socket.emit('taponnage', nomJoueur.innerText);
 });
 
@@ -111,7 +118,7 @@ socket.on('cartes_pretes', function (cartes) {
         li.appendChild(document.createTextNode(carte.cue));
         li.addEventListener('click', gererChoisirCarte, false);
         jeu.appendChild(li);
-    }    
+    }
 });
 
 socket.on('serveur_carte', function (tapis) {
@@ -147,27 +154,27 @@ socket.on('serveur_carte', function (tapis) {
 });
 
 socket.on('serveur_reponse', function (data) {
-    if(data.blnVictoire){
-        feedback.innerHTML = '<p><em>' + data.nom + 'a GAGNÉE la partie.' +'</em></p>';
+    if (data.blnVictoire) {
+        feedback.innerHTML = '<p><em>' + data.nom + 'a GAGNÉE la partie.' + '</em></p>';
         btn.innerHTML = '<a href="https://lotptimeline.herokuapp.com/connexion"/>';
         partieFini = true;
     }
-    else{
+    else {
         if (data.blnReponse)
             feedback.innerHTML = '<p><em>' + data.nom + ' a placé CORRECTEMENT sa carte.' + '</em></p>';
         else
             feedback.innerHTML = '<p><em>' + data.nom + ' a placé INCORRECTEMENT sa carte et en a pigé une nouvelle.' + '</em></p>';
-        }
+    }
 });
 
 //Indique au joueur que c'est son tour + débloque son bouton
-socket.on('mon_tour', function(){
+socket.on('mon_tour', function () {
     feedback.innerHTML = '<p>C\'est <strong>VOTRE</strong> tour.</p>';
     btn.removeAttribute('disabled');
 });
 
 //Indique aux joueurs que c'est le tour de quelqu'un + bloque leur bouton
-socket.on('son_tour', function(){
+socket.on('son_tour', function () {
     feedback.innerHTML = '<p>Ce <strong>N\'EST PAS</strong> votre tour.</p>';
     btn.setAttribute('disabled', 'disabled');
 });
