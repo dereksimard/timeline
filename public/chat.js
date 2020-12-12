@@ -160,11 +160,16 @@ socket.on('serveur_reponse', function (data) {
         }
 });
 
-socket.on('debut_tour', function () {
 
+//Indique au joueur que c'est son tour + débloque son bouton
+socket.on('mon_tour', function(){
+    feedback.innerHTML = '<p>C\'est <strong>VOTRE</strong> tour.</p>';
+    btn.disabled = false;
 });
 
-socket.on('fin_tour', function () {
-
+//Indique aux joueurs que c'est le tour de quelqu'un + bloque leur bouton
+socket.on('son_tour', function(nom){
+    feedback.innerHTML = '<p>C\'est le tour de <strong>'+nom+'</strong>.</p>';
+    btn.disabled = true;
 });
 

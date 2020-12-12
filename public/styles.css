@@ -48,6 +48,9 @@ h2 {
     position: absolute;
     bottom: 0;
 }
+#feedback.invalide{
+     color:red;
+}
 
 #feedback p {
     color: blue;
@@ -110,9 +113,7 @@ h2 {
     overflow: auto;
 
 }
-.invalide p{
-    color:red;
-}
+
 label {
     box-sizing: border-box;
     display: block;
