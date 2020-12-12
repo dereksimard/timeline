@@ -3,7 +3,7 @@
 var express = require('express');
 var socket = require('socket.io');
 var mongoose = require('mongoose');
-
+var dbUri = 'mongodb+srv://admin:admin123@timeline.9e4sd.mongodb.net/timeline?retryWrites=true&w=majority';
 //Models
 //cue = ce que l'utilisateur voit
 //show = ce qui est montré sur la ligne du temps
@@ -43,27 +43,22 @@ var carteModel = mongoose.model('Carte', CarteSchema);
 var utilisateurModel = mongoose.model('Utilisateur', UtilisateurSchema);
 var partieModel = mongoose.model('Partie', PartieSchema);
 
-mongoose.connect('mongodb+srv://admin:admin123@timeline.9e4sd.mongodb.net/timeline?retryWrites=true&w=majority',
-	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
+mongoose.connect(dbUri,	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
 var db = mongoose.connection;
 
 
-
+/*	--- Fonctions aynchrones ---	*/
 async function getCartes() {
-	var tab_cartes = []
-	console.log("2-juste avant le find");
+	var tab_cartes = []	
 	await carteModel.find(null, function (err, cartes) {
-
 		for (var carte of cartes) {
 			tab_cartes.push(carte);
 		}
-
 	});
 	return tab_cartes;
 }
 
 async function getJoueur(id_joueur) {
-
 	return await utilisateurModel.findById(id_joueur);
 }
 
@@ -73,7 +68,7 @@ async function getNbJoueursPartie(id_partie) {
 	return partieModel.aggregate([{ $match: { _id: objId } }, { $project: { nbJoueursAttendus: { $size: '$invites' }, _id: 0 } }]);
 }
 
-
+/////////////////////////////////////////////////////////////////
 
 // App setup
 var app = express();
@@ -94,6 +89,8 @@ var dictMains = {};
 var tapis = [];
 var tas;
 var nbJoueurs;
+
+
 // Lancement du Socket : événement, fonction de rappel
 io.on('connection', function (socket) {
 
@@ -106,7 +103,6 @@ io.on('connection', function (socket) {
 	//Obtention du nb de joueurs attendus
 	var promesseNbJoueurs = getNbJoueursPartie(id_partie);
 	var promesseCartes = getCartes();
-
 
 
 	promesseNbJoueurs.then(result => {
