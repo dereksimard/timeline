@@ -49,6 +49,8 @@ h2 {
 #messages {
     position: absolute;
     bottom: 0;
+    display: flex;
+    flex-direction: row;
 }
 
 #message_erreur p {
@@ -59,7 +61,7 @@ h2 {
 
 
 #feedback p,
-#message_tour {
+#message_tour p{
     color: blue;
     padding: 14px 0px;
     margin: 0 20px;
