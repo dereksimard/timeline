@@ -74,7 +74,7 @@ btn.addEventListener('click', function () {
         }
         else{
             //La position donné est invalide
-            feedback.innerHTML = '<p>Veuillez choisir une position <em>VALIDE.</em></p>';
+            feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
             feedback.classList.add('invalide');
         }
     }
