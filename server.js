@@ -155,6 +155,9 @@ io.on('connection', function (socket) {
 						tas = cartes;
 
 						//Le premier joueur du tableau (premier arrivé) commence son tour
+
+						sockets.to(dictJoueurs).emit('mon_tour');
+						sockets.broadcast.to(dictJoueurs).emit('son_tour');
 					}
 					else {
 						console.log("Pas de cartes trouvés");
@@ -164,11 +167,6 @@ io.on('connection', function (socket) {
 					console.log(error);
 				}
 			);//Fin résolution promesseCartes
-				
-				io.to(dictJoueurs).emit('mon_tour');
-			
-				io.broadcast.to(dictJoueurs).emit('son_tour');
-			}
 		}
 
 
@@ -299,10 +297,10 @@ io.on('connection', function (socket) {
 
 		for(var y = 0; y < nbJoueurs;y++){
 			if (i == tour){
-				io.to(dictJoueurs[y]).emit('mon_tour');
+				io.sockets.to(dictJoueurs[y]).emit('mon_tour');
 			}
 			else{
-				io.to(dictJoueurs[y]).emit('son_tour');
+				io.sockets.to(dictJoueurs[y]).emit('son_tour');
 			}
 		}
 	});
