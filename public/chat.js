@@ -63,16 +63,14 @@ socket.on('start', function (data) {
 btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
-    if (!partieFini) {
-        alert("valeur de la position"+positionCarte.value);
-        alert("valeur de la carte"+carteADeposer);
+    if (!partieFini) {       
 
         if (carteADeposer == null) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';
             feedback.classList.add('invalide');
         }
-        else if (positionCarte.value != null || positionCarte.value < 0 || positionCarte >Math.floor(output.children.length) ) {
+        else if (positionCarte.value != null || positionCarte.value < 0 || positionCarte >Math.floor(output.children.length/2) ) {
             //La position donné est invalide
             feedback.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';
             feedback.classList.add('invalide');
