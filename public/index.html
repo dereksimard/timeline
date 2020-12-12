@@ -10,20 +10,24 @@
   </head>
 
   <body>
-<p id="log"></p>
+    <p id="log"></p>
     <h1>TimeLine!</h1>
     <div id="tapis-02e">
       <div id="titre"></div>
       <div id="temps-window">
         <ul id="output"></ul>
-        <div id="feedback"></div>
-        <div id="message_erreur"></div>
+        <div>
+          <div id="feedback"></div>
+          <div id="message_erreur"></div>
+        </div>
+
       </div>
-  
-      <input id="positionCarte" type="number" min="0" placeholder="Entrez la position où déposer la carte (exemple : 0, 1, 2, etc.)" />
+
+      <input id="positionCarte" type="number" min="0"
+        placeholder="Entrez la position où déposer la carte (exemple : 0, 1, 2, etc.)" />
       <button id="send" disabled="disabled">Déposer la carte</button>
       <div id="section-joueur">
-       <p id="nomJoueur"></p>
+        <p id="nomJoueur"></p>
         <ul id="jeu">
           <!--Sera populé au début de la partie-->
         </ul>
@@ -36,7 +40,7 @@
 
   </body>
   <footer>
-    
+
   </footer>
 
   </html>
