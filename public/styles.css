@@ -1,12 +1,14 @@
 body {
     font-family: 'Nunito';
 }
-
+h1{
+    text-align: center;
+}
 h2 {
     font-size: 18px;
     padding: 10px 20px;
     color: #575ed8;
-  text-align: center;
+    text-align: center;
 }
 
 #tapis-02e {
@@ -61,7 +63,11 @@ h2 {
 
     justify-content: center;
 }
+#nomJoueur{
+    font-weight: bold;
+    display: inline-block;
 
+}
 #jeu {
     height: 200px;
     overflow: auto;
@@ -104,7 +110,9 @@ h2 {
     overflow: auto;
 
 }
-
+.invalide{
+    color:red;
+}
 label {
     box-sizing: border-box;
     display: block;

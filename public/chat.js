@@ -26,7 +26,6 @@ function gererChoisirCarte(e) {
 
     var texteCarte = e.target.innerText;
 
-
     for (var carte of jeu.childNodes) {
         if (carte.classList.contains('selectionnee')) {
             carte.classList.remove('selectionnee');
@@ -52,10 +51,10 @@ window.onload = function () {
 
 //////////////////////////// WebSocket
 
-// connection au socket            ICI : on retourne vers index.js
+// connection au socket
 var socket = io.connect(path.toString());
 
-//Affichage de l'id du joueur
+//Affichage du nom du joueur
 socket.on('start', function (data) {
     nomJoueur.innerText = data.utilisateur;   
 });
@@ -65,13 +64,18 @@ btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer
     if(!partieFini){
-        if((positionCarte.value != null || positionCarte.value < 0) && carteADeposer != null){
+        if((positionCarte.value != null || positionCarte.value < 0 || positionCarte.value >= output.childNodes.length) && carteADeposer != null){
             socket.emit('chat', {
                 position: positionCarte.value,
                 nomCarte: carteADeposer,
                 id_joueur: id_joueur,
                 nom: nomJoueur.innerText
             });
+        }
+        else{
+            //La position donné est invalide
+            feedback.innerHTML = '<p>Veuillez choisir une position <em>VALIDE.</em></p>';
+            feedback.classList.add('invalide');
         }
     }
     else{
@@ -81,13 +85,8 @@ btn.addEventListener('click', function () {
 
 //taponnage 1
 positionCarte.addEventListener('keypress', function () {
+    feedback.classList.remove('invalide');
     socket.emit('taponnage', nomJoueur.innerText);
-});
-
-// Écoute d'Événement 'chat' puisque l'utilisateur peut recevoir des messages en plus d'en envoyer
-socket.on('chat', function (data) {
-    feedback.innerHTML = "";
-    output.innerHTML += '<p><strong>' + data.user + ': </strong>' + data.message + '</p>';
 });
 
 //taponnage 3
@@ -168,3 +167,4 @@ socket.on('debut_tour', function () {
 socket.on('fin_tour', function () {
 
 });
+
