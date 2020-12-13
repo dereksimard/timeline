@@ -1,4 +1,5 @@
 "use strict";
+
 //Récupération des éléments du DOM
 var message_erreur = document.getElementById('message_erreur');
 var message_tour = document.getElementById('message_tour');
@@ -15,7 +16,6 @@ var carteADeposer;
 var partieFini = false;
 
 function gererChoisirCarte(e) {
-
     var texteCarte = e.target.innerText;
 
     for (var carte of jeu.childNodes) {
@@ -23,11 +23,9 @@ function gererChoisirCarte(e) {
             carte.classList.remove('selectionnee');
         }
     }
-
     e.target.classList.add("selectionnee");
     carteADeposer = texteCarte;
 }
-
 // récupération de l'url accédante
 var currentLocation = window.location;
 
@@ -56,30 +54,26 @@ btn.addEventListener('click', function () {
     //On envoie le nom de la carte que le joueur veut déposer ainsi que
     //la position où il veut la déposer    
         
-        if (carteADeposer == null) {
-            //La position donné est invalide
-            message_erreur.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';          
-         
-        }
-        else if (positionCarte.value != null && (positionCarte.value < 0 || positionCarte.value > Math.floor(output.children.length / 2))) {
-            //La position donné est invalide
-            message_erreur.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';           
-          
-        }
-        else {         
-            socket.emit('tour', {
-                position: positionCarte.value,
-                nomCarte: carteADeposer,
-                id_joueur: id_joueur,
-                nom: nomJoueur.innerText
-            });
-        }
-    
+    if (carteADeposer == null) {
+        //La position donné est invalide
+        message_erreur.innerHTML = '<p>Veuillez choisir une <strong>CARTE</strong>.</p>';             
+    }
+    else if (positionCarte.value != null && (positionCarte.value < 0 || positionCarte.value > Math.floor(output.children.length / 2))) {
+        //La position donné est invalide
+        message_erreur.innerHTML = '<p>Veuillez choisir une position <strong>VALIDE</strong>.</p>';                
+    }
+    else {         
+        socket.emit('tour', {
+            position: positionCarte.value,
+            nomCarte: carteADeposer,
+            id_joueur: id_joueur,
+            nom: nomJoueur.innerText
+        });
+    }
 });
 
 //taponnage 1
 positionCarte.addEventListener('keypress', function () {
-    
     message_erreur.innerHTML = "";
     socket.emit('taponnage', nomJoueur.innerText);
 });
@@ -95,7 +89,6 @@ socket.on('cartes_pretes', function (cartes) {
 
     //On supprimer tous les noeuds déjà présents au cas-où ce n'est pas la
     //première fois que la main est reçue.
-
     while (jeu.lastChild) {
         jeu.removeChild(jeu.lastChild);
     }
@@ -167,4 +160,3 @@ socket.on('son_tour', function () {
     message_tour.innerHTML = '<p>Ce <strong>N\'EST PAS</strong> votre tour.</p>';
     btn.setAttribute('disabled', 'disabled');
 });
-

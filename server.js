@@ -4,9 +4,8 @@ var express = require('express');
 var socket = require('socket.io');
 var mongoose = require('mongoose');
 var dbUri = 'mongodb+srv://admin:admin123@timeline.9e4sd.mongodb.net/timeline?retryWrites=true&w=majority';
+
 //Models
-//cue = ce que l'utilisateur voit
-//show = ce qui est montré sur la ligne du temps
 const CarteSchema = new mongoose.Schema({
 	cue: String,
 	show: String,
@@ -24,7 +23,7 @@ const UtilisateurSchema = new mongoose.Schema({
 	},
 	courriel: {
 		type: String,
-		unique: [true, 'Doit être unique'], //Attention, n'est pas un validator
+		unique: [true, 'Doit être unique'],
 		required: [true, 'Courriel obligatoire'],
 		lowercase: true,
 		validate: (value) => {
@@ -45,7 +44,6 @@ var partieModel = mongoose.model('Partie', PartieSchema);
 
 mongoose.connect(dbUri,	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
 var db = mongoose.connection;
-
 
 /*	--- Fonctions aynchrones ---	*/
 async function getCartes() {
@@ -68,8 +66,6 @@ async function getNbJoueursPartie(id_partie) {
 	return partieModel.aggregate([{ $match: { _id: objId } }, { $project: { nbJoueursAttendus: { $size: '$invites' }, _id: 0 } }]);
 }
 
-/////////////////////////////////////////////////////////////////
-
 // App setup
 var app = express();
 var server = app.listen(process.env.PORT || 3000, function () {
@@ -77,8 +73,6 @@ var server = app.listen(process.env.PORT || 3000, function () {
 
 // Static files
 app.use(express.static('public'));
-
-/////////////////////////////////////////////////////////////////
 
 // Instanciation du Socket
 var io = socket(server);
@@ -96,8 +90,6 @@ var carteRnd;
 // Lancement du Socket : événement, fonction de rappel
 io.on('connection', function (socket) {
 
-	console.log('Socket établi', socket.id);
-
 	//Récupération d'un paramètre (pour nous ça sera l'id de partie)
 	var id_partie = socket.handshake.query['id_partie'];
 	var id_joueur = socket.handshake.query['id_joueur'];
@@ -107,20 +99,22 @@ io.on('connection', function (socket) {
 	var promesseCartes = getCartes();
 
 	promesseNbJoueurs.then(result => {
+
 		nbJoueurs = result[0].nbJoueursAttendus;
+
 		//Si la clé id_joueur n'est pas dans le dictionnaire, on l'ajoute
 		//clé = id_joueur, valeur = socket
 		if (!(id_joueur in dictJoueurs)) {
 
 			dictJoueurs[id_joueur] = socket.id;
-			console.log("Le joueur " + id_joueur + " a le socket " + socket.id);
 			joueurs.push(id_joueur);
-
 		}
 
 		if (Object.keys(dictJoueurs).length == nbJoueurs) {
+		
 			//Tout le monde est là, on peut distribuer les cartes
 			promesseCartes.then(
+		
 				cartes => {
 					if (cartes) {
 
@@ -136,7 +130,6 @@ io.on('connection', function (socket) {
 								//Association d'un joueur avec sa main
 								dictMains[id] = main;
 							}
-
 							//Envoie à un seul joueur
 							io.to(dictJoueurs[id]).emit('cartes_pretes', main);
 						});
@@ -145,18 +138,13 @@ io.on('connection', function (socket) {
 						carteRnd = Math.floor(Math.random() * cartes.length);
 						var carte = cartes[carteRnd];
 						tapis.push(carte);
-						console.log(carte);
 						cartes.splice(carteRnd, 1);
-						console.log(tapis);
 
 						//Envoie à tous les joueurs
 						io.sockets.to(id_partie).emit('serveur_carte', tapis);
 
 						//Pour que les cartes soient accessibles plus tard
 						tas = cartes;
-					}
-					else {
-						console.log("Pas de cartes trouvés");
 					}
 				},
 				error => {
@@ -169,32 +157,25 @@ io.on('connection', function (socket) {
 	io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
 
 	//Obtention du joueur qui vient de se connecter pour obtenir son nom
-	//(fonction async)
 	var promesseJoueur = getJoueur(id_joueur);
 
 	promesseJoueur.then(
 		joueur => {
 			if (joueur)
 				socket.emit('start', { utilisateur: joueur.nom });
-			else
-				console.log("Pas de joueur trouvé");
 		},
 		error => {
 			console.log(error);
 		}
 	);
 
-	// Optionnel : Attacher le socket à un espace nommé
-	//socket.join('jeu'); De cette façon, on permet à un certain utlisateur
+	//Permet à un certain utlisateur
 	//de joindre un espace restraint.
 	socket.join(id_partie);
 
 	// Gestion d'événement lancé depuis un socket
 	socket.on('tour', function (data) {
-		//console.log('position de la carte : ' + data.position);
-		//console.log("contenu du tapis : " + tapis);
-		console.log("id joueur après déposer carte" + data.id_joueur);
-
+		
 		//Récupération de la main du joueur et de sa carte choisie
 		var id_joueur = data.id_joueur;
 		var position = parseInt(data.position);
@@ -206,10 +187,8 @@ io.on('connection', function (socket) {
 			if (main[i].cue == data.nomCarte) {
 				var carte = main[i];
 				trouvee = true;
-				console.log("trouvée!");
 			}
 		}
-		console.log("carte choisie : " + carte);
 		//Validation de la carte (on compare la réponse des cartes juxtaposées à
 		//celle déposée)
 
@@ -217,30 +196,17 @@ io.on('connection', function (socket) {
 		var blnVictoire = false;
 
 		if (position == 0) {
-			if (carte.rep <= tapis[position].rep) {
-				console.log("bonne réponse!");
-			}
-			else {
-				console.log("Mauvaise réponse!");
+			if (!(carte.rep <= tapis[position].rep)) {
 				blnReponse = false;
 			}
 		}
-
 		else if (position == tapis.length) {
-			if (carte.rep >= tapis[position - 1].rep) {
-				console.log("bonne réponse!");
-			}
-			else {
-				console.log("Mauvaise réponse!");
+			if (!(carte.rep >= tapis[position - 1].rep)) {
 				blnReponse = false;
 			}
 		}
 		else {
-			if (carte.rep >= tapis[position - 1].rep && carte.rep <= tapis[position].rep) {
-				console.log("bonne réponse!");
-			}
-			else {
-				console.log("Mauvaise réponse!");
+			if (!(carte.rep >= tapis[position - 1].rep && carte.rep <= tapis[position].rep)) {
 				blnReponse = false;
 			}
 		}
@@ -251,11 +217,7 @@ io.on('connection', function (socket) {
 			tapis.splice(position, 0, carte);
 			io.sockets.to(id_partie).emit('serveur_carte', tapis);
 
-			//TODO : Décompte pour vérifier si le joueur a gagné
-			console.log(Object.keys(dictMains[id_joueur]).length);
 			if (Object.keys(dictMains[id_joueur]).length == 1) {
-				//Victoire
-				console.log("reste:" + dictMains[id_joueur].$size + "donc victoire");
 				blnVictoire = true;
 			}
 		}
@@ -264,13 +226,11 @@ io.on('connection', function (socket) {
 			carteRnd = Math.floor(Math.random() * tas.length);
 			var nouvCarte = tas[carteRnd];
 			dictMains[id_joueur].push(nouvCarte);
-			console.log("Nouvelle carte : " + nouvCarte);
-
+			
 			//On retire du tas la carte donnée et on rajoute celle pour
 			//laquelle le joueur a eu une mauvaise réponse
 			tas.splice(carteRnd, 1, carte);
 		}
-
 		//Peu importe si la réponse est bonne, la carte est retirée de la main
 		//du joueur et on lui renvoie sa nouvelle main. Note : ne pas faire 
 		//main.splice, car c'est c'est une copie de la main contenue dans le dictionnaire
@@ -284,8 +244,6 @@ io.on('connection', function (socket) {
 			blnVictoire: blnVictoire
 		});
 		
-		console.log(joueurs);
-
 		if(!blnVictoire){
 			io.to(dictJoueurs[joueurs[tour]]).emit('son_tour');
 
@@ -296,18 +254,14 @@ io.on('connection', function (socket) {
 			tour = 0;
 		}
 		
-		console.log("tour de joueur:"+tour);
-	
 		io.to(dictJoueurs[joueurs[tour]]).emit('mon_tour');
 		}
 	});
 
 	//taponnage 2
 	socket.on('taponnage', function (data) {
-		console.log("taponnage 2" + data);
 		// Réponse à tous les sockets hormis l'envoyeur
 		socket.broadcast.to(id_partie).emit('taponnage', data);
-		//socket.broadcast.emit('taponnage', data);
 	});
 
 	socket.on('disconnect', function () {
