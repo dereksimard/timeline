@@ -67,7 +67,7 @@ btn.addEventListener('click', function () {
           
         }
         else {         
-            socket.emit('chat', {
+            socket.emit('tour', {
                 position: positionCarte.value,
                 nomCarte: carteADeposer,
                 id_joueur: id_joueur,

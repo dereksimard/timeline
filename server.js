@@ -190,7 +190,7 @@ io.on('connection', function (socket) {
 	socket.join(id_partie);
 
 	// Gestion d'événement lancé depuis un socket
-	socket.on('chat', function (data) {
+	socket.on('tour', function (data) {
 		//console.log('position de la carte : ' + data.position);
 		//console.log("contenu du tapis : " + tapis);
 		console.log("id joueur après déposer carte" + data.id_joueur);
